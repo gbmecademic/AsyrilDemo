@@ -14,8 +14,8 @@ robot.WaitHomed()
 # Move the robot to safe start position
 robot.SetWrf(0, 0, 0, 0, 0, 0)
 robot.SetTrf(*TRF_PICK)
-robot.SetJointVel(10)
-robot.SetCartLinVel(25)
+robot.SetJointVel(HIGH_SPEED_JOINT)
+robot.SetCartLinVel(LOW_SPEED_LIN)
 robot.SetGripperForce(10)
 robot.SetGripperVel(20)
 robot.SetGripperRange(0, 13)
@@ -60,11 +60,10 @@ while True:
             robot.MovePose(*SAFE_POS_FEED)
             robot.MovePose(*DROP_FEED)
             robot.GripperOpen()
+            robot.Delay(0.2)
             robot.MoveJoints(*SAFE_POS_FRONT)
             cp = robot.SetCheckpoint(42)
             cp.wait()
-
-        break
 
     robot.GripperOpen()
     robot.MoveJoints(*SAFE_POS_FRONT)
@@ -77,12 +76,11 @@ while True:
     if camera.extract_status(response) != 200:
         print(response)
         raise Exception('Problem with the Get Part')
-    part_pos = camera.extract_position(camera.get_part())
+    part_pos = camera.extract_position(response)
 
     ### Move the robot to pick the part ###
     robot.MovePose(*SAFE_POS_FEED)
     robot.MovePose(part_pos[0], part_pos[1], Z_POS+30, 0, 0, part_pos[2])
-    robot.Delay(2)
     robot.MoveLin(part_pos[0], part_pos[1], Z_POS, 0, 0, part_pos[2])
     robot.GripperClose()
     robot.Delay(0.5)
@@ -112,7 +110,6 @@ while True:
     if vial_number >= len(PLACE_POS):
         vial_number = 0
         rack_full = True
-        print('Duck')
 
 camera.stop_production()
 robot.Disconnect()
