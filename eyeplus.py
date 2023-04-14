@@ -34,6 +34,12 @@ class EyePlusClient:
         response = self.__receive_raw__()
         return response
 
+    def force_take_image(self):
+        command = "force_take_image"
+        self.__send_raw__(command)
+        response = self.__receive_raw__()
+        return response
+
     def prepare_part(self):
         command = "prepare_part"
         self.__send_raw__(command)

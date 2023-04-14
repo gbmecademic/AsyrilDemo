@@ -64,6 +64,7 @@ while True:
             robot.MoveJoints(*SAFE_POS_FRONT)
             cp = robot.SetCheckpoint(42)
             cp.wait()
+            camera.force_take_image()
 
     robot.GripperOpen()
     robot.MoveJoints(*SAFE_POS_FRONT)
